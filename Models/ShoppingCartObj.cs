@@ -1,9 +1,11 @@
 namespace ShoppingCart.Models;
 
+using ShoppingCart.Utils;
+
 using System.Collections.Generic;
 using System.Linq;
 
-public class ShoppingCart
+public class ShoppingCartObj
 {
 
     public HashSet<ShoppingCartItem> Items = new();
@@ -12,7 +14,7 @@ public class ShoppingCart
 
 
     // Constructor
-    public ShoppingCart(int userId)
+    public ShoppingCartObj(int userId)
     {
 	this.UserId = userId;
     }

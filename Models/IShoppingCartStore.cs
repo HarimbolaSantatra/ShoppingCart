@@ -1,6 +1,7 @@
 namespace ShoppingCart.Models;
+
 public interface IShoppingCartStore
 {
-    ShoppingCart Get(int userId);
-    void Save(ShoppingCart shoppingCart);
+    ShoppingCartObj Get(int userId);
+    void Save(ShoppingCartObj shoppingCart);
 }
