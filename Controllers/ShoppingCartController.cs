@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 using ShoppingCart.Models;
 
+public class ShoppingCartController
+{
+
     public ShoppingCartController()
-    {
-    }
+    { }
 
 
     // Declares the endpoint for handling requests to /shoppingcart/{userid}
@@ -23,8 +25,15 @@ using ShoppingCart.Models;
     [HttpGet("{userId:int}")]
     public ActionResult GetUserCart(int userId)
     {
-	ShoppingCartObj userCart = 
-	return new JsonResult(userCart.Serialize(userCart.Items.Count == 0));
+	var res = new Dictionary<string, object>();
+	var carts = new List<Dictionary<string, object>>();
+	using (var context = new AppDbContext())
+	{
+	    ShoppingCartObj userCart = context.ShoppingCartObjects.First();
+	    carts.Add(userCart.Serialize(userCart.Items.Count == 0));
+	}
+	res.Add("carts", carts);
+	return new JsonResult(res);
     }
 
 
@@ -32,25 +41,25 @@ using ShoppingCart.Models;
     [HttpPost("{userId:int}/item")]
     public ActionResult AddItem(int userId, [FromBody] ShoppingCartItem shoppingCartItem)
     {
+	using (var context = new AppDbContext())
+	{
 
-	// Get the user's ShoppingCart
-	ShoppingCartObj shoppingCart = 
-	// Update the ShoppingCart
-	shoppingCart.AddItem(shoppingCartItem);
+	    // Get the user's ShoppingCart
+	    ShoppingCartObj shoppingCart = context.ShoppingCartObjects
+		.Where(cart => cart.UserId == userId)
+		.Single();
 
-	Dictionary<string, object> res = shoppingCart.Serialize();
-	return new JsonResult(res);
-    }
+	    // Update the ShoppingCart
+	    shoppingCart.AddItem(shoppingCartItem);
 
+	    // Save the change in the database
+	    context.ShoppingCartObjects.Add(shoppingCart);
+	    context.SaveChanges();
 
-    // Add multiple items to a user shopping cart
-    [HttpPost("{userId:int}/items")]
-    public void AddItems(int userId, IEnumerable<ShoppingCartItem> shoppingCartItems)
-    {
-	// Get the user's ShoppingCart
-	ShoppingCartObj shoppingCart = 
-	// Update the ShoppingCart
-	shoppingCart.AddItems(shoppingCartItems);
+	    // Return the created object
+	    Dictionary<string, object> res = shoppingCart.Serialize();
+	    return new JsonResult(res);
+	}
     }
 
 
