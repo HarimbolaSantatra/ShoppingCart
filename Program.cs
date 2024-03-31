@@ -1,6 +1,5 @@
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
-builder.Services.AddScoped<ShoppingCart.Models.IShoppingCartStore, ShoppingCart.Models.ShoppingCartStore>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

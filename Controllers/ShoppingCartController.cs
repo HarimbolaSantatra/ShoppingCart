@@ -4,15 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using ShoppingCart.Models;
 
-[ApiController]
-[Route("/shoppingcart")]
-public class ShoppingCartController : ControllerBase
-{
-    private readonly IShoppingCartStore shoppingCartStore;
-    
-    public ShoppingCartController(IShoppingCartStore shoppingCartStore)
+    public ShoppingCartController()
     {
-	this.shoppingCartStore = shoppingCartStore;
     }
 
 
@@ -30,7 +23,7 @@ public class ShoppingCartController : ControllerBase
     [HttpGet("{userId:int}")]
     public ActionResult GetUserCart(int userId)
     {
-	ShoppingCartObj userCart = this.shoppingCartStore.Get(userId);
+	ShoppingCartObj userCart = 
 	return new JsonResult(userCart.Serialize(userCart.Items.Count == 0));
     }
 
@@ -41,10 +34,9 @@ public class ShoppingCartController : ControllerBase
     {
 
 	// Get the user's ShoppingCart
-	ShoppingCartObj shoppingCart = shoppingCartStore.Get(userId);
+	ShoppingCartObj shoppingCart = 
 	// Update the ShoppingCart
 	shoppingCart.AddItem(shoppingCartItem);
-	this.shoppingCartStore.Save(shoppingCart);
 
 	Dictionary<string, object> res = shoppingCart.Serialize();
 	return new JsonResult(res);
@@ -56,10 +48,9 @@ public class ShoppingCartController : ControllerBase
     public void AddItems(int userId, IEnumerable<ShoppingCartItem> shoppingCartItems)
     {
 	// Get the user's ShoppingCart
-	ShoppingCartObj shoppingCart = shoppingCartStore.Get(userId);
+	ShoppingCartObj shoppingCart = 
 	// Update the ShoppingCart
 	shoppingCart.AddItems(shoppingCartItems);
-	this.shoppingCartStore.Save(shoppingCart);
     }
 
 

@@ -7,7 +7,6 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 | Branch | Description |
 | --- | --- |
 | main | My implementation |
-| book/dummyInterface | Add a a dummy implementation of the IShoppingCartStore interface |
 | dev/removeItem | **Implementaton**: remove item from a shoppingCart |
 
 > [!IMPORTANT]
