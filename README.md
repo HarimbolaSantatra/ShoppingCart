@@ -13,12 +13,8 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 > [!IMPORTANT]
 > .NET Core do not use `startup.cs` anymore, which is still used in the book; instead, I use `Program.cs` on the *master* branch.
 
-
-### Overview of the Shopping Cart microservice
-Microservices:
-- Shopping Cart
-- Product catalog
-- Price Calculation
+### Database
+**Name**: *shopping_cart*
 
 ## Resources:
 - [ Gammerlgaard's book ][1]
