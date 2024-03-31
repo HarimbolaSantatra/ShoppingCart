@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 public class ShoppingCartStore : IShoppingCartStore
 {
 
-    private Logger logger;
+    private MyLogger logger;
     // Database: <userId, ShoppingCart>
     private Dictionary<int, ShoppingCart> Database = new Dictionary<int, ShoppingCart>();
 
@@ -13,7 +13,7 @@ public class ShoppingCartStore : IShoppingCartStore
     {
 
 	// Logger
-	this.logger = new Logger("debug");
+	this.logger = new MyLogger("debug");
 
 	// Populate with default data for userId 1
 	ShoppingCart s1 = new ShoppingCart(1);

@@ -8,7 +8,7 @@ public class ShoppingCart
 
     public HashSet<ShoppingCartItem> Items = new();
     public int UserId { get; }
-    private Logger logger = new Logger("debug");
+    private MyLogger logger = new MyLogger("debug");
 
 
     // Constructor
