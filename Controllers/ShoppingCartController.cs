@@ -1,8 +1,10 @@
 namespace ShoppingCart.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.Models;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
+
+using ShoppingCart.Models;
 
 
 [ApiController]
@@ -11,52 +13,57 @@ public class ShoppingCartController : ControllerBase
 {
     private readonly IShoppingCartStore shoppingCartStore;
     
-    private readonly ILogger _logger;
-
-    public ShoppingCartController(IShoppingCartStore shoppingCartStore, ILogger<ShoppingCartController> logger)
+    public ShoppingCartController(IShoppingCartStore shoppingCartStore)
     {
 	this.shoppingCartStore = shoppingCartStore;
-	this._logger = logger;
     }
+
 
     // Declares the endpoint for handling requests to /shoppingcart/{userid}
     [HttpGet("")]
-    public string Index() =>
-	"Shopping Cart Microservice is working ...";
+    public ActionResult Index()
+    {
+	var res = new Dictionary<String, String>();
+	res.Add("status", "ShoppingCart microservice is working!");
+	return new JsonResult(res);
+    }
+
 
     // Get a user's cart
     [HttpGet("{userId:int}")]
-    public ShoppingCart GetUserCart(int userId) =>
-	this.shoppingCartStore.Get(userId);
+    public ActionResult GetUserCart(int userId)
+    {
+	ShoppingCart userCart = this.shoppingCartStore.Get(userId);
+	return new JsonResult(userCart.Serialize(userCart.Items.Count == 0));
+    }
+
 
     // Add one item to a user shopping cart
     [HttpPost("{userId:int}/item")]
-    public void AddItem(int userId, [FromBody] ShoppingCartItem shoppingCartItem)
+    public ActionResult AddItem(int userId, [FromBody] ShoppingCartItem shoppingCartItem)
     {
 
-	// Logging
-	this._logger.LogInformation($@"Add item for user {userId}
-ShoppingCartItem parameters:
-    ProductCatalogueId: {shoppingCartItem.ProductCatalogueId},
-    ProductName: {shoppingCartItem.ProductName},
-    Description: {shoppingCartItem.Description},
-    Price: {shoppingCartItem.Price},
-		");
-
 	// Get the user's ShoppingCart
-	ShoppingCart shoppingCart = GetUserCart(userId);
+	ShoppingCart shoppingCart = shoppingCartStore.Get(userId);
 	// Update the ShoppingCart
 	shoppingCart.AddItem(shoppingCartItem);
+	this.shoppingCartStore.Save(shoppingCart);
+
+	Dictionary<string, object> res = shoppingCart.Serialize();
+	return new JsonResult(res);
     }
+
 
     // Add multiple items to a user shopping cart
     [HttpPost("{userId:int}/items")]
     public void AddItems(int userId, IEnumerable<ShoppingCartItem> shoppingCartItems)
     {
 	// Get the user's ShoppingCart
-	ShoppingCart shoppingCart = GetUserCart(userId);
+	ShoppingCart shoppingCart = shoppingCartStore.Get(userId);
 	// Update the ShoppingCart
 	shoppingCart.AddItems(shoppingCartItems);
+	this.shoppingCartStore.Save(shoppingCart);
     }
+
 
 }
