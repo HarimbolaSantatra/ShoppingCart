@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 using ShoppingCart.Models;
 
+
+[ApiController]
+[Route("/shoppingcart")]
 public class ShoppingCartController
 {
 

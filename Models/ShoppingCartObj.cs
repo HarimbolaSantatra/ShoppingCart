@@ -8,14 +8,16 @@ using System.Linq;
 public class ShoppingCartObj
 {
 
-    public HashSet<ShoppingCartItem> Items = new();
+    public int Id { get; }
     public int UserId { get; }
+    public HashSet<ShoppingCartItem> Items = new();
     private MyLogger logger = new MyLogger("debug");
 
 
     // Constructor
-    public ShoppingCartObj(int userId)
+    public ShoppingCartObj(int id, int userId)
     {
+	this.Id = id;
 	this.UserId = userId;
     }
 
