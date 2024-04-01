@@ -15,12 +15,10 @@ public class AppDbContext : DbContext
     {
 	base.OnModelCreating(modelBuilder);
 
-	modelBuilder.Entity<ShoppingCartObj>(entity =>
-		{
-		entity.HasKey(e => e.Id);
-		entity.Property(e => e.UserId).IsRequired();
-		entity.Property(e => e.Items).IsRequired();
-		});
+	// TODO: many-to-many relationship: https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
+	modelBuilder.Entity<ShoppingCartObj>()
+	    .HasMany(e => e.Items)
+	    .WithOne(e => e.)
 
 	modelBuilder.Entity<ShoppingCartItem>(entity =>
 		{
