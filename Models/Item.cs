@@ -8,7 +8,10 @@ public class Item {
     public string Description {get; set;}
     public int Price {get; set;}
 
-    public Item(int id, int ProductCatalogueId, string ProductName, string Description, int Price) {
+    public int CartId { get; }
+    public Cart? Cart { get; set; } = null;
+
+    public Item (int id, int ProductCatalogueId, string ProductName, string Description, int Price) {
 
 	this.Id = id;
 	this.ProductCatalogueId = ProductCatalogueId;

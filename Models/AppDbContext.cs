@@ -15,12 +15,13 @@ public class AppDbContext : DbContext
     {
 	base.OnModelCreating(modelBuilder);
 
-	// TODO: many-to-many relationship: https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
-	modelBuilder.Entity<ShoppingCartObj>()
-	    .HasMany(e => e.Items)
-	    .WithOne(e => e.)
+	modelBuilder.Entity<Cart>()
+	    .HasMany(cart => cart.Items)
+	    .WithOne(item => item.Cart)
+	    .HasForeignKey(item => item.CartId)
+	    .IsRequired();
 
-	modelBuilder.Entity<ShoppingCartItem>(entity =>
+	modelBuilder.Entity<Item>(entity =>
 		{
 		entity.HasKey(e => e.Id);
 		entity.Property(e => e.ProductCatalogueId).IsRequired();
@@ -31,7 +32,7 @@ public class AppDbContext : DbContext
 
     }
 
-    public DbSet<ShoppingCartObj> ShoppingCartObjects { get; set; }
-    public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+    public DbSet<Cart> ShoppingCartObjects { get; set; }
+    public DbSet<Item> ShoppingCartItems { get; set; }
 
 }
