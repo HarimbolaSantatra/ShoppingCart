@@ -10,8 +10,9 @@ public class Cart
 
     public int Id { get; }
     public int UserId { get; }
-    public HashSet<Item> Items = new();
     private MyLogger logger = new MyLogger("debug");
+
+    public ICollection<Item> Items { get; } = new List<Item>();
 
 
     // Constructor
@@ -72,7 +73,12 @@ public class Cart
 	    this.Items.Add(item);
     }
 
-    public void RemoveItems(int[] productCatalogueIds) =>
-	this.Items.RemoveWhere(i => productCatalogueIds.Contains(
-		    i.ProductCatalogueId));
+    /// <summary>
+    /// Method RemoveItems removes all the items in the collection
+    /// </summary>
+    public void RemoveItems(ICollection<Item> items)
+    {
+	foreach (var item in items)
+	    this.Items.Remove(item);
+    }
 }
