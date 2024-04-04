@@ -32,7 +32,7 @@ public class ShoppingCartController
 	var carts = new List<Dictionary<string, object>>();
 	using (var context = new AppDbContext())
 	{
-	    ShoppingCartObj userCart = context.ShoppingCartObjects.First();
+	    Cart userCart = context.ShoppingCartObjects.First();
 	    carts.Add(userCart.Serialize(userCart.Items.Count == 0));
 	}
 	res.Add("carts", carts);
@@ -42,13 +42,13 @@ public class ShoppingCartController
 
     // Add one item to a user shopping cart
     [HttpPost("{userId:int}/item")]
-    public ActionResult AddItem(int userId, [FromBody] ShoppingCartItem shoppingCartItem)
+    public ActionResult AddItem(int userId, [FromBody] Item shoppingCartItem)
     {
 	using (var context = new AppDbContext())
 	{
 
 	    // Get the user's ShoppingCart
-	    ShoppingCartObj shoppingCart = context.ShoppingCartObjects
+	    Cart shoppingCart = context.ShoppingCartObjects
 		.Where(cart => cart.UserId == userId)
 		.Single();
 

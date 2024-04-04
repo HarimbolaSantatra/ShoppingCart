@@ -1,6 +1,6 @@
 namespace ShoppingCart.Models;
 
-public class ShoppingCartItem {
+public class Item {
 
     public int Id {get; }
     public int ProductCatalogueId {get; set;}
@@ -8,7 +8,7 @@ public class ShoppingCartItem {
     public string Description {get; set;}
     public int Price {get; set;}
 
-    public ShoppingCartItem(int id, int ProductCatalogueId, string ProductName, string Description, int Price) {
+    public Item(int id, int ProductCatalogueId, string ProductName, string Description, int Price) {
 
 	this.Id = id;
 	this.ProductCatalogueId = ProductCatalogueId;
@@ -18,7 +18,7 @@ public class ShoppingCartItem {
 
     }
 
-	public virtual bool Equals(ShoppingCartItem? obj) =>
+	public virtual bool Equals(Item? obj) =>
 	    obj != null && this.ProductCatalogueId.Equals(obj.ProductCatalogueId);
 
 	public override int GetHashCode() =>

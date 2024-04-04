@@ -5,17 +5,17 @@ using ShoppingCart.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ShoppingCartObj
+public class Cart
 {
 
     public int Id { get; }
     public int UserId { get; }
-    public HashSet<ShoppingCartItem> Items = new();
+    public HashSet<Item> Items = new();
     private MyLogger logger = new MyLogger("debug");
 
 
     // Constructor
-    public ShoppingCartObj(int id, int userId)
+    public Cart(int id, int userId)
     {
 	this.Id = id;
 	this.UserId = userId;
@@ -46,7 +46,7 @@ public class ShoppingCartObj
     }
 
 
-    public void AddItem(ShoppingCartItem shoppingCartItem)
+    public void AddItem(Item shoppingCartItem)
     {
 	this.Items.Add(shoppingCartItem);
 
@@ -66,7 +66,7 @@ public class ShoppingCartObj
 
     }
 
-    public void AddItems(IEnumerable<ShoppingCartItem> shoppingCartItems)
+    public void AddItems(IEnumerable<Item> shoppingCartItems)
     {
 	foreach (var item in shoppingCartItems)
 	    this.Items.Add(item);
