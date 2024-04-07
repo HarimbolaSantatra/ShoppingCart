@@ -3,12 +3,14 @@ namespace ShoppingCart.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 using ShoppingCart.Models;
-
+using ShoppingCart.Utils;
 
 [ApiController]
 [Route("/shoppingcart")]
 public class ShoppingCartController
 {
+
+    private MyLogger logger = new MyLogger("debug");
 
     public ShoppingCartController()
     { }
@@ -32,9 +34,11 @@ public class ShoppingCartController
 	var carts = new List<Dictionary<string, object>>();
 	using (var context = new AppDbContext())
 	{
+	    logger.Debug("Querying context ...");
 	    Cart userCart = context.ShoppingCartObjects.First();
 	    carts.Add(userCart.Serialize(userCart.Items.Count == 0));
 	}
+	logger.Debug("Adding carts ...");
 	res.Add("carts", carts);
 	return new JsonResult(res);
     }
@@ -53,9 +57,11 @@ public class ShoppingCartController
 		.Single();
 
 	    // Update the ShoppingCart
+	    logger.Debug("Updating the shopping cart ...");
 	    shoppingCart.AddItem(shoppingCartItem);
 
 	    // Save the change in the database
+	    logger.Debug("Saving ...");
 	    context.ShoppingCartObjects.Add(shoppingCart);
 	    context.SaveChanges();
 
