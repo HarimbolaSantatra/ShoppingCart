@@ -1,7 +1,9 @@
 namespace ShoppingCart.Models;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+[Table("Item")]
 public class Item {
 
     [Key]
