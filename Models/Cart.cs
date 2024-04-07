@@ -5,23 +5,17 @@ using ShoppingCart.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
+using System.ComponentModel.DataAnnotations;
+
 public class Cart
 {
 
-    public int Id { get; }
+    [Key]
+    public int Id { get; set; }
     public int UserId { get; }
     private MyLogger logger = new MyLogger("debug");
 
-    public ICollection<Item> Items { get; } = new List<Item>();
-
-
-    // Constructor
-    public Cart(int id, int userId)
-    {
-	this.Id = id;
-	this.UserId = userId;
-    }
-
+    public List<Item> Items { get; } = new List<Item>();
 
     public Dictionary<String, object> Serialize(bool empty=false)
     {
