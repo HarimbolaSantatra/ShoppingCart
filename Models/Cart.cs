@@ -19,6 +19,7 @@ public class Cart
 
     public List<Item> Items { get; } = new List<Item>();
 
+
     public Dictionary<String, object> Serialize(bool empty=false)
     {
 	Dictionary<String, object> res = new Dictionary<String, object>();

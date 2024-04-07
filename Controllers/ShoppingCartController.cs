@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.Models;
 using ShoppingCart.Utils;
 
+using Microsoft.EntityFrameworkCore;
+
 [ApiController]
 [Route("/shoppingcart")]
 public class ShoppingCartController
@@ -35,8 +37,20 @@ public class ShoppingCartController
 	using (var context = new AppDbContext())
 	{
 	    logger.Debug("Querying context ...");
-	    Cart userCart = context.ShoppingCartObjects.First();
-	    carts.Add(userCart.Serialize(userCart.Items.Count == 0));
+	    // Check if result is empty
+	    DbSet<Cart> set = context.ShoppingCartObjects;
+	    bool isEmpty = false;
+	    Cart userCart = new Cart(){};
+	    if ( set != null && set.Any() )
+	    {
+		userCart = context.ShoppingCartObjects.First();
+	    }
+	    else
+	    {
+		logger.Debug("userCart is empty");
+		isEmpty = true;
+	    }
+	    carts.Add(userCart.Serialize(isEmpty));
 	}
 	logger.Debug("Adding carts ...");
 	res.Add("carts", carts);
