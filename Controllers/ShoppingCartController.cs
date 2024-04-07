@@ -40,7 +40,7 @@ public class ShoppingCartController
 	    // Check if result is empty
 	    DbSet<Cart> set = context.ShoppingCartObjects;
 	    bool isEmpty = false;
-	    Cart userCart = new Cart(){};
+	    Cart userCart = new Cart(){ Id = userId};
 	    if ( set != null && set.Any() )
 	    {
 		userCart = context.ShoppingCartObjects.First();
@@ -52,7 +52,6 @@ public class ShoppingCartController
 	    }
 	    carts.Add(userCart.Serialize(isEmpty));
 	}
-	logger.Debug("Adding carts ...");
 	res.Add("carts", carts);
 	return new JsonResult(res);
     }
