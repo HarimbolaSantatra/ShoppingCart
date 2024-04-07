@@ -6,7 +6,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ShoppingCart.Migrations
 {
     /// <inheritdoc />
-    public partial class addTables : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,15 +15,16 @@ namespace ShoppingCart.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ShoppingCartObjects",
+                name: "Cart",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingCartObjects", x => x.Id);
+                    table.PrimaryKey("PK_Cart", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -43,9 +44,9 @@ namespace ShoppingCart.Migrations
                 {
                     table.PrimaryKey("PK_Item", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Item_ShoppingCartObjects_CartId1",
+                        name: "FK_Item_Cart_CartId1",
                         column: x => x.CartId1,
-                        principalTable: "ShoppingCartObjects",
+                        principalTable: "Cart",
                         principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -63,7 +64,7 @@ namespace ShoppingCart.Migrations
                 name: "Item");
 
             migrationBuilder.DropTable(
-                name: "ShoppingCartObjects");
+                name: "Cart");
         }
     }
 }

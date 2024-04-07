@@ -11,8 +11,8 @@ using ShoppingCart.Models;
 namespace ShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240407132758_addTables")]
-    partial class addTables
+    [Migration("20240407181242_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,9 +28,12 @@ namespace ShoppingCart.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingCartObjects");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ShoppingCart.Models.Item", b =>

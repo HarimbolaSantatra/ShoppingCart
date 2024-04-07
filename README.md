@@ -7,6 +7,7 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 | Branch | Description |
 | --- | --- |
 | main | My implementation |
+| dev/addItem | **Implementaton**: add item for a user's shoppingCart |
 | dev/removeItem | **Implementaton**: remove item from a shoppingCart |
 
 > [!IMPORTANT]

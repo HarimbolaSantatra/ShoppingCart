@@ -14,10 +14,23 @@ public class Cart
 
     [Key]
     public int Id { get; set; }
-    public int UserId { get; }
+    public int UserId { get; set; }
     private MyLogger logger = new MyLogger("debug");
 
     public List<Item> Items { get; } = new List<Item>();
+
+
+    /// <summary>
+    /// Method checkIfEmpty check if a list of Cart is empty or not
+    /// </summary>
+    public static bool IsEmpty(IEnumerable<Cart> carts)
+    {
+	if (carts != null && carts.Any())
+	{
+	    return false;
+	}
+	return true;
+    }
 
 
     public Dictionary<String, object> Serialize(bool empty=false)

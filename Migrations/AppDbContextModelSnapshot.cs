@@ -25,9 +25,12 @@ namespace ShoppingCart.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingCartObjects");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ShoppingCart.Models.Item", b =>
