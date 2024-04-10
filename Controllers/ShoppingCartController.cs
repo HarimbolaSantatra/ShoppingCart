@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.Models;
 using ShoppingCart.Utils;
 
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 [ApiController]
@@ -33,36 +32,40 @@ public class ShoppingCartController
     [HttpGet("{userId:int}")]
     public ActionResult GetUserCart(int userId)
     {
+	const String unity = "ShoppingCartController.GetUserCart";
 	var res = new Dictionary<string, object>();
-	var carts = new List<Dictionary<string, object>>();
 	using (var context = new AppDbContext())
 	{
-	    logger.Debug("Querying context ...");
+	    logger.Debug(unity, "Querying context ...");
 	    // Get the user's ShoppingCart
-	    IEnumerable<Cart> cartList = context.ShoppingCartObjects
-		.ToList<Cart>()
-		.Where(cart => cart.UserId == userId);
-	    Cart userCart;
+	    var userCart = context.ShoppingCartObjects
+		.SingleOrDefault(cart => cart.UserId == userId);
 	    // Check if result is empty
-	    bool isEmpty = Cart.IsEmpty(cartList);
-	    if (isEmpty)
+	    if (userCart == null)
 	    {
-		logger.Debug($"Cart for user {userId} is empty");
-		userCart = new Cart(){ UserId = userId };
+		logger.Debug(unity, $"Cart for user {userId} is empty");
+		res.Add("status", "empty");
 	    }
 	    else
 	    {
-		userCart = context.ShoppingCartObjects.First();
+		logger.Debug(unity, $"Cart for user {userId} exists");
+		try {
+		    userCart = context.ShoppingCartObjects.Single(cart => cart.UserId == userId);
+		    res.Add("status", "exist");
+		    res.Add("cart", userCart.Serialize());
+		}
+		catch(InvalidOperationException)
+		{
+		    logger.Error(unity, $"userCart of userId {userId} contains more than one element");
+		    res.Add("status", $"Error: userCart of userId {userId} contains more than one element");
+		}
 	    }
-	    carts.Add(userCart.Serialize(isEmpty));
 	}
-	res.Add("carts", carts);
 	return new JsonResult(res);
     }
 
 
     // Add one item to a user shopping cart
-    // TODO: FIX AddItem method of Controller: System.Text.Json.JsonException: A possible object cycle was detected
     [HttpPost("{userId:int}/item")]
     public ActionResult AddItem(int userId, [FromBody] Item shoppingCartItem)
     {
@@ -70,37 +73,47 @@ public class ShoppingCartController
 	{
 
 	    // Get the user's ShoppingCart
-	    IEnumerable<Cart> userCarts = context.ShoppingCartObjects
+	    var userCart = context.ShoppingCartObjects
 		.ToList<Cart>()
-		.Where(cart => cart.UserId == userId);
+		.SingleOrDefault(cart => cart.UserId == userId);
 
-	    // One instance of userCart
-	    Cart userCart;
+	    String operationStatus;
 
 	    // Check if set is not empty
-	    if(! Cart.IsEmpty(userCarts))
+	    if(userCart == null)
 	    {
-		// TODO: take each cart possessed by the user
-		// Only take the first
-		userCart = context.ShoppingCartObjects.First();
+		logger.Debug("ShoppingCartController.AddItem", $"Cart for userId {userId} is empty");
+		operationStatus = "create";
+		// Create a new cart
+		userCart = new Cart(){ UserId = userId };
+		logger.Debug("ShoppingCartController.AddItem", "Creating the shopping cart ...");
 	    }
 	    else
 	    {
-		userCart = new Cart(){ UserId = userId };
-		logger.Debug("userCart is empty");
+		operationStatus = "update";
+		logger.Debug("ShoppingCartController.AddItem", $"Cart for userId {userId} exists");
+		logger.Debug("ShoppingCartController.AddItem", "Updating the shopping cart ...");
 	    }
 
 	    // Update the ShoppingCart
-	    logger.Debug("Updating the shopping cart ...");
-	    userCart.AddItem(shoppingCartItem);
+	    userCart.Items.Add(shoppingCartItem);
 
 	    // Save the change in the database
-	    logger.Debug("Saving ...");
-	    context.ShoppingCartObjects.Add(userCart);
+	    logger.Debug("ShoppingCartController.AddItem", $"Saving cart --- Id: {userCart.Id}; UserId: {userCart.UserId}");
+	    context.Add(userCart);
 	    context.SaveChanges();
 
 	    // Return the created object
+	    logger.Debug("ShoppingCartController.AddItem", "Saved to the database. Serializing ...");
+
+	    // TODO: FIX AddItem method of Controller: System.Text.Json.JsonException: A possible object cycle was detected
+	    // Path: $.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items
 	    Dictionary<string, object> res = userCart.Serialize();
+
+	    // Set status: Update or Create
+	    logger.Debug("Serialization done.");
+	    res.Add("operation", operationStatus);
+
 	    return new JsonResult(res);
 	}
     }

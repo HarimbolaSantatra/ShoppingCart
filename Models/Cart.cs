@@ -17,7 +17,7 @@ public class Cart
     public int UserId { get; set; }
     private MyLogger logger = new MyLogger("debug");
 
-    public List<Item> Items { get; } = new List<Item>();
+    public List<Item> Items { get; set; } = new List<Item>();
 
 
     /// <summary>
@@ -33,49 +33,35 @@ public class Cart
     }
 
 
-    public Dictionary<String, object> Serialize(bool empty=false)
+    public Dictionary<String, object> Serialize()
     {
 	Dictionary<String, object> res = new Dictionary<String, object>();
 	res.Add("userId", ( this.UserId ).ToString());
-	if (empty || this.Items.Count == 0 )
-	    res.Add("items", "[]");
-	else
+
+	// check if Cart doesn't contain any items
+	if (this.Items == null || this.Items.Count == 0 )
 	{
-	    Dictionary<String, String>[] arrayItem = {};
-	    Dictionary<String, String> dict = new Dictionary<String, String>();
-	    foreach (var shoppingCartItem in this.Items)
-	    {
-		dict.Add("ProductCatalogueId", shoppingCartItem.ProductCatalogueId.ToString());
-		dict.Add("ProductName", shoppingCartItem.ProductName);
-		dict.Add("Description", shoppingCartItem.Description);
-		dict.Add("Price", shoppingCartItem.Price.ToString());
-		arrayItem.Append(dict);
-	    }
-	    res.Add("items", Items);
+	    logger.Debug("Cart.Serialize", "this.Items doesn't contain any items.");
+	    res.Add("items", "[]");
+	    return res;
 	}
+
+	Dictionary<String, String>[] arrayItem = {};
+	Dictionary<String, String> dict;
+	foreach (var item in this.Items)
+	{
+	    dict = new Dictionary<String, String>();
+	    dict.Add("Id", item.Id.ToString());
+	    dict.Add("ProductCatalogueId", item.ProductCatalogueId.ToString());
+	    dict.Add("ProductName", item.ProductName);
+	    dict.Add("Description", item.Description);
+	    dict.Add("Price", item.Price.ToString());
+	    arrayItem.Append(dict);
+	}
+	res.Add("items", arrayItem);
 	return res;
     }
 
-
-    public void AddItem(Item shoppingCartItem)
-    {
-	this.Items.Add(shoppingCartItem);
-
-	// LOGGING: print the Hast Set: this.Items
-	string logs = "";
-	logs = "Element in the resulting set: ";
-	logs += "{";
-	foreach (var item in this.Items)
-	{
-	    logs += $"ProductCatalogueId: {item.ProductCatalogueId} - ";
-	    logs += $"ProductName: {item.ProductName} - ";
-	    logs += $"Description: {item.Description} - ";
-	    logs += $"Price: {item.Price}";
-	}
-	logs += " }";
-	logger.Debug(logs);
-
-    }
 
     public void AddItems(IEnumerable<Item> shoppingCartItems)
     {
