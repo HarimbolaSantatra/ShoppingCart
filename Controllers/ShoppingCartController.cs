@@ -106,8 +106,6 @@ public class ShoppingCartController
 	    // Return the created object
 	    logger.Debug("ShoppingCartController.AddItem", "Saved to the database. Serializing ...");
 
-	    // TODO: FIX AddItem method of Controller: System.Text.Json.JsonException: A possible object cycle was detected
-	    // Path: $.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items.Cart.Items
 	    Dictionary<string, object> res = userCart.Serialize();
 
 	    // Set status: Update or Create
@@ -118,5 +116,22 @@ public class ShoppingCartController
 	}
     }
 
+
+    // Get all carts
+    [HttpGet("carts")]
+    public ActionResult GetCarts()
+    {
+	const String unity = "ShoppingCartController.GetCarts";
+	IEnumerable<Cart> carts;
+	Dictionary<String, object> res = new Dictionary<string, object>();
+	using (var context = new AppDbContext())
+	{
+	    logger.Debug(unity, "Getting all Cart objects ...");
+	    carts = context.ShoppingCartObjects;
+	    res.Add("carts", carts);
+	}
+	logger.Debug(unity, "returning ...");
+	return new JsonResult(res);
+    }
 
 }

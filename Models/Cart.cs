@@ -39,7 +39,7 @@ public class Cart
 	res.Add("userId", ( this.UserId ).ToString());
 
 	// check if Cart doesn't contain any items
-	if (this.Items == null || this.Items.Count == 0 )
+	if ( this.Items == null || this.Items.Count == 0 )
 	{
 	    logger.Debug("Cart.Serialize", "this.Items doesn't contain any items.");
 	    res.Add("items", "[]");
