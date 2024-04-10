@@ -38,19 +38,23 @@ public class ShoppingCartController
 	using (var context = new AppDbContext())
 	{
 	    logger.Debug("Querying context ...");
-	    // Check if result is empty
-	    List<Cart> cartList = context.ShoppingCartObjects.ToList<Cart>();
+	    // Get the user's ShoppingCart
+	    IEnumerable<Cart> cartList = context.ShoppingCartObjects
+		.ToList<Cart>()
+		.Where(cart => cart.UserId == userId);
 	    Cart userCart;
-	    if (! Cart.IsEmpty(cartList))
+	    // Check if result is empty
+	    bool isEmpty = Cart.IsEmpty(cartList);
+	    if (isEmpty)
+	    {
+		logger.Debug($"Cart for user {userId} is empty");
+		userCart = new Cart(){ UserId = userId };
+	    }
+	    else
 	    {
 		userCart = context.ShoppingCartObjects.First();
 	    }
-	    else
-	    { 
-		userCart = new Cart(){ UserId = userId };
-		logger.Debug("userCart is empty");
-	    }
-	    carts.Add(userCart.Serialize(true));
+	    carts.Add(userCart.Serialize(isEmpty));
 	}
 	res.Add("carts", carts);
 	return new JsonResult(res);
