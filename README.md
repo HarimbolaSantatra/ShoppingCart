@@ -10,9 +10,6 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 | dev/addItem | **Implementaton**: add item for a user's shoppingCart |
 | dev/removeItem | **Implementaton**: remove item from a shoppingCart |
 
-> [!IMPORTANT]
-> .NET Core do not use `startup.cs` anymore, which is still used in the book; instead, I use `Program.cs` on the *master* branch.
-
 ### Database
 **Name**: *shopping_cart*
 

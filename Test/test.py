@@ -22,12 +22,14 @@ def get_carts():
 def add_item(user_id: int):
     endpoint = f"{BASE}/{user_id}/item"
     data = {
-            "Id": 1,
-            "ProductCatalogueId": 2,
-            "ProductName": "testProduct",
-            "Description": "This is a test product",
-            "Price": 5,
-            "CartId": 1,
+            "shoppingCartItem": {
+                "Id": 1,
+                "ProductCatalogueId": 2,
+                "ProductName": "testProduct",
+                "Description": "This is a test product",
+                "Price": 5,
+                "CartId": 1,
+                }
             }
     res = requests.post(
             endpoint,
