@@ -10,8 +10,8 @@ using ShoppingCart.Models;
 namespace ShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240427192434_addUserTable")]
-    partial class addUserTable
+    [Migration("20240427201745_firstMigration")]
+    partial class firstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,9 @@ namespace ShoppingCart.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Cart");
                 });
@@ -102,6 +105,22 @@ namespace ShoppingCart.Migrations
                         .HasForeignKey("ItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ShoppingCart.Models.Cart", b =>
+                {
+                    b.HasOne("ShoppingCart.Models.User", "User")
+                        .WithOne("cart")
+                        .HasForeignKey("ShoppingCart.Models.Cart", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Models.User", b =>
+                {
+                    b.Navigation("cart");
                 });
 #pragma warning restore 612, 618
         }

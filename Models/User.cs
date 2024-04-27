@@ -11,6 +11,9 @@ public class User {
 
     public string Username { get; set; }
 
+    // for one-to-one relationship
+    public Cart? cart { get; set; }
+
     public User(string username)
     {
 	this.Username = username;

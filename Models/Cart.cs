@@ -14,8 +14,13 @@ public class Cart
 
     [Key]
     public int Id { get; set; }
-    public int UserId { get; set; }
+
+    // reference for many to many relationship
     public List<Item> Items { get; set; } = new List<Item>();
+
+    // for one-to-many relationship
+    public int UserId { get; set; }
+    public User User { get; set; } = null;
 
     private MyLogger logger = new MyLogger("debug");
 
