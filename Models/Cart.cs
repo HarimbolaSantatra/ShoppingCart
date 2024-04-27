@@ -15,10 +15,9 @@ public class Cart
     [Key]
     public int Id { get; set; }
     public int UserId { get; set; }
-    private MyLogger logger = new MyLogger("debug");
-
     public List<Item> Items { get; set; } = new List<Item>();
 
+    private MyLogger logger = new MyLogger("debug");
 
     /// <summary>
     /// Method checkIfEmpty check if a list of Cart is empty or not
