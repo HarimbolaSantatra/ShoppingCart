@@ -4,14 +4,14 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 
 ## ABOUT THE PROJECT
 ### Branch
-| Branch | Description |
-| --- | --- |
-| main | My implementation |
-| dev/addItem | **Implementaton**: add item for a user's shoppingCart |
-| dev/removeItem | **Implementaton**: remove item from a shoppingCart |
+- main : master branch
+- dev/addItem : controller AddItems - add item for a user's shoppingCart
+- dev/removeItem : remove item from a shoppingCart
+- dev/logger: refac logger functionality
 
 ### Database
-**Name**: *shopping_cart*
+- Tech: MariaDb/MySQL
+- **Name**: *shopping_cart*
 
 ## Resources:
 - [ Gammerlgaard's book ][1]

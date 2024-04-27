@@ -1,7 +1,6 @@
 namespace ShoppingCart.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using ShoppingCart.Models;
 using ShoppingCart.Utils;
@@ -22,7 +21,12 @@ public class ShoppingCartController
     }
 
 
-    // Declares the endpoint for handling requests to /shoppingcart/{userid}
+    /// <summary>
+    /// Declares the endpoint for handling requests to /shoppingcart/
+    /// </summary>
+    /// <returns>
+    /// Test JSON status
+    /// </returns>
     [HttpGet("")]
     public ActionResult Index()
     {
@@ -32,7 +36,13 @@ public class ShoppingCartController
     }
 
 
-    // Get a user's cart
+    /// <summary>
+    /// Get a user's cart
+    /// <param name="userId">ID of the user</param>
+    /// </summary>
+    /// <returns>
+    /// The Cart object
+    /// </returns>
     [HttpGet("{userId:int}")]
     public ActionResult GetUserCart(int userId)
     {
@@ -66,12 +76,19 @@ public class ShoppingCartController
     }
 
 
-    // Add one item to a user shopping cart
+    
+    /// <summary>
+    /// Add one item to a user shopping cart
+    /// <param name="userId">ID of the user</param>
+    /// </summary>
+    /// <returns>
+    /// The JSON representation of the created Cart object
+    /// </returns>
     [HttpPost("{userId:int}/item")]
     public ActionResult AddItem(int userId)
     {
 
-	// draft
+	// DRAFT
 	Item shoppingCartItem = new Item("testName", 25);
 
 	// Get the user's ShoppingCart
@@ -117,7 +134,12 @@ public class ShoppingCartController
     }
 
 
-    // Get all carts
+    /// <summary>
+    /// Get all carts of all users.
+    /// </summary>
+    /// <returns>
+    /// A JSON containing a list of Cart.
+    /// </returns>
     [HttpGet("carts")]
     public ActionResult GetCarts()
     {
@@ -127,7 +149,6 @@ public class ShoppingCartController
 	logger.Debug(unity, "Getting all Cart objects ...");
 	carts = _context.ShoppingCartObjects;
 	res.Add("carts", carts);
-	logger.Debug(unity, "returning ...");
 	return new JsonResult(res);
     }
 
