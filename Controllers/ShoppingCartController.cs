@@ -48,9 +48,9 @@ public class ShoppingCartController
     {
 	const String unity = "ShoppingCartController.GetUserCart";
 	var res = new Dictionary<string, object>();
-	logger.Debug(unity, "Querying _context ...");
-	// Get the user's ShoppingCart
-	var userCart = _context.ShoppingCartObjects
+	logger.Debug(unity, "==== GetUserCart begin ====");
+
+	var userCart = _context.Carts
 	    .SingleOrDefault(cart => cart.UserId == userId);
 	// Check if result is empty
 	if (userCart == null)
@@ -61,16 +61,8 @@ public class ShoppingCartController
 	else
 	{
 	    logger.Debug(unity, $"Cart for user {userId} exists");
-	    try {
-		userCart = _context.ShoppingCartObjects.Single(cart => cart.UserId == userId);
-		res.Add("status", "exist");
-		res.Add("cart", userCart.Serialize());
-	    }
-	    catch(InvalidOperationException)
-	    {
-		logger.Error(unity, $"userCart of userId {userId} contains more than one element");
-		res.Add("status", $"Error: userCart of userId {userId} contains more than one element");
-	    }
+	    res.Add("status", "exist");
+	    res.Add("cart", _context.Carts);
 	}
 	return new JsonResult(res);
     }
@@ -78,7 +70,7 @@ public class ShoppingCartController
 
     
     /// <summary>
-    /// Add one item to a user shopping cart
+    /// Add one item to a user's shopping cart
     /// <param name="userId">ID of the user</param>
     /// </summary>
     /// <returns>
@@ -92,7 +84,7 @@ public class ShoppingCartController
 	Item shoppingCartItem = new Item("testName", 25);
 
 	// Get the user's ShoppingCart
-	var userCart = _context.ShoppingCartObjects
+	var userCart = _context.Carts
 	    .ToList<Cart>()
 	    .SingleOrDefault(cart => cart.UserId == userId);
 
@@ -104,8 +96,9 @@ public class ShoppingCartController
 	    logger.Debug("ShoppingCartController.AddItem", $"Cart for userId {userId} is empty");
 	    operationStatus = "create";
 	    // Create a new cart
+	    logger.Debug("ShoppingCartController.AddItem", "Creating the Cart ...");
 	    userCart = new Cart(){ UserId = userId };
-	    logger.Debug("ShoppingCartController.AddItem", "Creating the shopping cart ...");
+	    _context.Add(userCart);
 	}
 	else
 	{
@@ -114,25 +107,45 @@ public class ShoppingCartController
 	    logger.Debug("ShoppingCartController.AddItem", "Updating the shopping cart ...");
 	}
 
-	// Update the ShoppingCart
+	// // TODO: check if item exists in the database or not
+	// logger.Debug("ShoppingCartController.AddItem", "Creating the Item ...");
+	// _context.Add(shoppingCartItem);
+	// _context.SaveChanges();
+
+	logger.Debug("ShoppingCartController.AddItem", "Adding the Item to the cart ...");
 	userCart.Items.Add(shoppingCartItem);
-
-	// Save the change in the database
-	logger.Debug("ShoppingCartController.AddItem", $"Saving cart --- Id: {userCart.Id}; UserId: {userCart.UserId}");
 	_context.SaveChanges();
+	logger.Debug("ShoppingCartController.AddItem", "Saving done.");
 
-	// Return the created object
-	logger.Debug("ShoppingCartController.AddItem", "Saved to the database. Serializing ...");
+	// TODO: check if the user exist
 
-	Dictionary<string, object> res = userCart.Serialize();
+	Dictionary<string, object> res = new Dictionary<string, object>();
+	res.Add("items", userCart.Serialize());
 
 	// Set status: Update or Create
-	logger.Debug("Serialization done.");
 	res.Add("operation", operationStatus);
 
 	return new JsonResult(res);
     }
 
+
+    /// <summary>
+    /// Get all items
+    /// </summary>
+    /// <returns>
+    /// A JSON containing a list of Item
+    /// </returns>
+    [HttpGet("items")]
+    public ActionResult GetItems()
+    {
+	const String unity = "ShoppingCartController.GetItems";
+	IEnumerable<Item> items;
+	Dictionary<String, object> res = new Dictionary<string, object>();
+	logger.Debug(unity, "Getting all Items objects ...");
+	items = _context.Items;
+	res.Add("items", items);
+	return new JsonResult(res);
+    }
 
     /// <summary>
     /// Get all carts of all users.
@@ -147,7 +160,7 @@ public class ShoppingCartController
 	IEnumerable<Cart> carts;
 	Dictionary<String, object> res = new Dictionary<string, object>();
 	logger.Debug(unity, "Getting all Cart objects ...");
-	carts = _context.ShoppingCartObjects;
+	carts = _context.Carts;
 	res.Add("carts", carts);
 	return new JsonResult(res);
     }

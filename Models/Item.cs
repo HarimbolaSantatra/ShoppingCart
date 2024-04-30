@@ -14,7 +14,7 @@ public class Item {
     public string? Description { get; set; } = String.Empty;
     public int Price { get; set; }
 
-    public List<Cart> Carts { get; set; } = new List<Cart>();
+    public List<Cart> Carts { get; set; } = [];
 
     public Item(string productName, int price)
     {

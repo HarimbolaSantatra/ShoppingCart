@@ -16,9 +16,9 @@ public class Cart
     public int Id { get; set; }
 
     // reference for many to many relationship
-    public List<Item> Items { get; set; } = new List<Item>();
+    public List<Item> Items { get; set; } = [];
 
-    // for one-to-many relationship
+    // for one-to-one relationship
     public int UserId { get; set; }
     public User User { get; set; } = null;
 
@@ -40,29 +40,24 @@ public class Cart
     public Dictionary<String, object> Serialize()
     {
 	Dictionary<String, object> res = new Dictionary<String, object>();
-	res.Add("userId", ( this.UserId ).ToString());
+	res.Add("userId", this.UserId);
 
-	// check if Cart doesn't contain any items
-	if ( this.Items == null || this.Items.Count == 0 )
-	{
-	    logger.Debug("Cart.Serialize", "this.Items doesn't contain any items.");
-	    res.Add("items", "[]");
-	    return res;
-	}
-
-	Dictionary<String, String>[] arrayItem = {};
+	ICollection<Dictionary<String, String>> arrayDict = new List<Dictionary<string, string>>();
 	Dictionary<String, String> dict;
 	foreach (var item in this.Items)
 	{
+	    logger.Debug("Tafiditra ao @le loop misy items !");
 	    dict = new Dictionary<String, String>();
 	    dict.Add("Id", item.Id.ToString());
 	    dict.Add("ProductCatalogueId", item.ProductCatalogueId.ToString());
 	    dict.Add("ProductName", item.ProductName);
 	    dict.Add("Description", item.Description);
 	    dict.Add("Price", item.Price.ToString());
-	    arrayItem.Append(dict);
+	    arrayDict.Add(dict);
+	    logger.Debug($"Dict len is {arrayDict.Count}");
 	}
-	res.Add("items", arrayItem);
+	logger.Debug($"Dict len is {arrayDict.Count}");
+	res.Add("items", arrayDict);
 	return res;
     }
 
