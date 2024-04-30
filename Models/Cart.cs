@@ -46,7 +46,6 @@ public class Cart
 	Dictionary<String, String> dict;
 	foreach (var item in this.Items)
 	{
-	    logger.Debug("Tafiditra ao @le loop misy items !");
 	    dict = new Dictionary<String, String>();
 	    dict.Add("Id", item.Id.ToString());
 	    dict.Add("ProductCatalogueId", item.ProductCatalogueId.ToString());
@@ -54,9 +53,7 @@ public class Cart
 	    dict.Add("Description", item.Description);
 	    dict.Add("Price", item.Price.ToString());
 	    arrayDict.Add(dict);
-	    logger.Debug($"Dict len is {arrayDict.Count}");
 	}
-	logger.Debug($"Dict len is {arrayDict.Count}");
 	res.Add("items", arrayDict);
 	return res;
     }
