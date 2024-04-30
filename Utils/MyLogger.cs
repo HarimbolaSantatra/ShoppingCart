@@ -29,6 +29,7 @@ namespace ShoppingCart.Utils
 	/// <para name="unity"> The name of the class or the method that uses it.</para>
 	/// <para name="message">The log message</para>
 	/// </summary>
+	// TODO: make 'unity' as a property
 	public void Debug(string unity, string message)
 	{
 	    DateTime currentDate = DateTime.Now;

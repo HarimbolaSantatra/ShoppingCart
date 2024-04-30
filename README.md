@@ -9,9 +9,20 @@ Master repo is [here](https://github.com/HarimbolaSantatra/gammerlgaard-shopping
 - dev/removeItem : remove item from a shoppingCart
 - dev/logger: refac logger functionality
 
+### Files
+- *sql/*: helper sql script
+- *Test/*: python api test script for client
+- *reset-migration.sh*: delete all migrations and all rows in the database
+
 ### Database
 - Tech: MariaDb/MySQL
 - **Name**: *shopping_cart*
+
+### Endpoints
+- GET - `/1`: get a user's cart information
+- POST - `/1/item`: add an item to the user's cart
+- GET - `/carts`: Get all carts for all users
+- GET - `/items`: Get all items
 
 ## Resources:
 - [ Gammerlgaard's book ][1]
