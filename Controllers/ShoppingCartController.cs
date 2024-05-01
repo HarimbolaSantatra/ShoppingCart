@@ -80,7 +80,7 @@ public class ShoppingCartController
     public ActionResult AddItem(int userId)
     {
 
-	// DRAFT
+	// TODO: real item in the body of the request
 	Item shoppingCartItem = new Item("testName", 25);
 
 	// Get the user's ShoppingCart
@@ -108,9 +108,6 @@ public class ShoppingCartController
 	}
 
 	// // TODO: check if item exists in the database or not
-	// logger.Debug("ShoppingCartController.AddItem", "Creating the Item ...");
-	// _context.Add(shoppingCartItem);
-	// _context.SaveChanges();
 
 	logger.Debug("ShoppingCartController.AddItem", "Adding the Item to the cart ...");
 	userCart.Items.Add(shoppingCartItem);
