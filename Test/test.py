@@ -47,12 +47,30 @@ def add_item(user_id: int):
     print("=== Adding item ====")
     return res.text
 
+def test():
+    endpoint = f"{BASE}/test"
+    data = {
+            "user": {
+                "Id": 1,
+                "Username": "santatra"
+                }
+            }
+    test_data = {
+            "user": "santatra"
+            }
+    res = requests.post(
+            endpoint,
+            data=test_data,
+            headers=HEADERS
+            )
+    print()
+    print("=== Make test ====")
+    print("Your request body is {}".format(res.request.body))
+    return res.text
+
 def main():
     user_id = 1
-    print(get_user_cart(user_id))
-    print(get_carts())
-    print(get_items())
-    print(add_item(user_id))
+    print(test())
 
 
 if __name__ == '__main__':
