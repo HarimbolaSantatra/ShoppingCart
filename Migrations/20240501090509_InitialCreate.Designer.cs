@@ -10,7 +10,7 @@ using ShoppingCart.Models;
 namespace ShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240430182319_InitialCreate")]
+    [Migration("20240501090509_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,21 +20,6 @@ namespace ShoppingCart.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("CartItem", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ItemsId");
-
-                    b.HasIndex("ItemsId");
-
-                    b.ToTable("CartItem");
-                });
 
             modelBuilder.Entity("ShoppingCart.Models.Cart", b =>
                 {
@@ -59,6 +44,9 @@ namespace ShoppingCart.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -73,6 +61,8 @@ namespace ShoppingCart.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.ToTable("Item");
                 });
@@ -92,21 +82,6 @@ namespace ShoppingCart.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CartItem", b =>
-                {
-                    b.HasOne("ShoppingCart.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShoppingCart.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ShoppingCart.Models.Cart", b =>
                 {
                     b.HasOne("ShoppingCart.Models.User", "User")
@@ -116,6 +91,22 @@ namespace ShoppingCart.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Models.Item", b =>
+                {
+                    b.HasOne("ShoppingCart.Models.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Models.Cart", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("ShoppingCart.Models.User", b =>

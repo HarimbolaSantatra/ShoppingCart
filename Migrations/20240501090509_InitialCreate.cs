@@ -15,23 +15,6 @@ namespace ShoppingCart.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Item",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ProductCatalogueId = table.Column<int>(type: "int", nullable: false),
-                    ProductName = table.Column<string>(type: "longtext", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Item", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -66,25 +49,24 @@ namespace ShoppingCart.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CartItem",
+                name: "Item",
                 columns: table => new
                 {
-                    CartsId = table.Column<int>(type: "int", nullable: false),
-                    ItemsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ProductCatalogueId = table.Column<int>(type: "int", nullable: false),
+                    ProductName = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    CartId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartItem", x => new { x.CartsId, x.ItemsId });
+                    table.PrimaryKey("PK_Item", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CartItem_Cart_CartsId",
-                        column: x => x.CartsId,
+                        name: "FK_Item_Cart_CartId",
+                        column: x => x.CartId,
                         principalTable: "Cart",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CartItem_Item_ItemsId",
-                        column: x => x.ItemsId,
-                        principalTable: "Item",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -97,22 +79,19 @@ namespace ShoppingCart.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItem_ItemsId",
-                table: "CartItem",
-                column: "ItemsId");
+                name: "IX_Item_CartId",
+                table: "Item",
+                column: "CartId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CartItem");
+                name: "Item");
 
             migrationBuilder.DropTable(
                 name: "Cart");
-
-            migrationBuilder.DropTable(
-                name: "Item");
 
             migrationBuilder.DropTable(
                 name: "User");
