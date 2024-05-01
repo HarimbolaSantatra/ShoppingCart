@@ -14,7 +14,9 @@ public class Item {
     public string? Description { get; set; } = String.Empty;
     public int Price { get; set; }
 
-    public List<Cart> Carts { get; set; } = [];
+    // Reference to parent for one-to-many relationship
+    public int CartId { get; set; } // Foreign key
+    public Cart Cart { get; set; } = null; // Reference to the parent
 
     public Item(string productName, int price)
     {

@@ -15,8 +15,8 @@ public class Cart
     [Key]
     public int Id { get; set; }
 
-    // reference for many to many relationship
-    public List<Item> Items { get; set; } = [];
+    // reference to child for one-to-many relationship
+    public List<Item> Items { get; } = new List<Item>();
 
     // for one-to-one relationship
     public int UserId { get; set; }
