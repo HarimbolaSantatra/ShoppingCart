@@ -68,59 +68,54 @@ public class ShoppingCartController
     }
 
 
-    
     /// <summary>
-    /// Add one item to a user's shopping cart
-    /// <param name="userId">ID of the user</param>
+    /// Add a list of Item to the cart
     /// </summary>
+    /// <param name="cartItem">Represent a cart and an item</param>
     /// <returns>
-    /// The JSON representation of the created Cart object
+    /// The JSON representation of the created Item object
     /// </returns>
-    [HttpPost("{userId:int}/item")]
-    public ActionResult AddItem(int userId)
+    [HttpPost("item")]
+    public ActionResult AddItems(CartItem cartItem)
     {
 
-	// TODO: real item in the body of the request
-	Item shoppingCartItem = new Item("testName", 25);
+	//TODO: make the controller async
 
-	// Get the user's ShoppingCart
-	var userCart = _context.Carts
-	    .ToList<Cart>()
-	    .SingleOrDefault(cart => cart.UserId == userId);
+	Dictionary<string, object> res = new Dictionary<string, object>();
 
-	String operationStatus;
-
-	// Check if set is not empty
-	if(userCart == null)
+	// Get the cart
+	var cart = _context.Carts.ToList().SingleOrDefault(cart => cart.Id == cartItem.cartId);
+	if (cart == null)
 	{
-	    logger.Debug("ShoppingCartController.AddItem", $"Cart for userId {userId} is empty");
-	    operationStatus = "create";
-	    // Create a new cart
-	    logger.Debug("ShoppingCartController.AddItem", "Creating the Cart ...");
-	    userCart = new Cart(){ UserId = userId };
-	    _context.Add(userCart);
-	}
-	else
-	{
-	    operationStatus = "update";
-	    logger.Debug("ShoppingCartController.AddItem", $"Cart for userId {userId} exists");
-	    logger.Debug("ShoppingCartController.AddItem", "Updating the shopping cart ...");
+	    logger.Error("ShoppingCartController.AddItems", "Cart doesn't exist");
+	    res.Add("operation", "inexistant_cart");
+	    return new JsonResult(res);
 	}
 
-	// // TODO: check if item exists in the database or not
+	// Get the item
+	IEnumerable<Item> items = _context.Items.ToList().Where(item => cartItem.itemsId.Contains(item.Id));
+	if (items == null)
+	{
+	    logger.Error("ShoppingCartController.AddItems", "Item doesn't exist");
+	    res.Add("operation", "inexistant_item");
+	    return new JsonResult(res);
+	}
 
 	logger.Debug("ShoppingCartController.AddItem", "Adding the Item to the cart ...");
-	userCart.Items.Add(shoppingCartItem);
+
+	foreach (Item item in items)
+	{
+	    cart.Items.Add(item);
+	}
 	_context.SaveChanges();
-	logger.Debug("ShoppingCartController.AddItem", "Saving done.");
+	logger.Debug("ShoppingCartController.AddItem", "Update done.");
 
 	// TODO: check if the user exist
 
-	Dictionary<string, object> res = new Dictionary<string, object>();
-	res.Add("items", userCart.Serialize());
+	res.Add("items", cart.Serialize());
 
 	// Set status: Update or Create
-	res.Add("operation", operationStatus);
+	res.Add("operation", "updated");
 
 	return new JsonResult(res);
     }
@@ -145,12 +140,12 @@ public class ShoppingCartController
     }
 
     /// <summary>
-    /// Get all carts of all users.
+    /// Get all carts
     /// </summary>
     /// <returns>
     /// A JSON containing a list of Cart.
     /// </returns>
-    [HttpGet("carts")]
+    [HttpGet("cart")]
     public ActionResult GetCarts()
     {
 	const String unity = "ShoppingCartController.GetCarts";
@@ -162,4 +157,39 @@ public class ShoppingCartController
 	return new JsonResult(res);
     }
 
+
+    /// <summary>
+    /// Add a cart to the database
+    /// </summary>
+    /// <returns>
+    /// The JSON representation of the created Cart object
+    /// </returns>
+    [HttpPost("cart")]
+    public ActionResult AddCart (Cart cart)
+    {
+
+	Dictionary<string, object> res = new Dictionary<string, object>();
+
+	// Get the cart
+	var carts = _context.Carts;
+	if (carts == null)
+	{
+	    logger.Error("ShoppingCartController.AddCart", "Cart is null");
+	    res.Add("operation", "inexistant_cart");
+	    return new JsonResult(res);
+	}
+
+	logger.Debug("ShoppingCartController.AddCart", "Adding the Cart to the database ...");
+
+	carts.Add(cart);
+	_context.SaveChanges();
+	logger.Debug("ShoppingCartController.AddCart", "Update done.");
+
+	res.Add("cart", cart.Serialize());
+
+	// Set status: Update or Create
+	res.Add("operation", "updated");
+
+	return new JsonResult(res);
+    }
 }

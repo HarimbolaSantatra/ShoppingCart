@@ -1,0 +1,9 @@
+- dev/addItem : controller AddItems - add item for a user's shoppingCart
+- squash commmit: implement add Items and addCart
+
+
+- removeItem : remove item from a shoppingCart
+- logger: refac logger functionality
+- Add another microservice that handle storage: item storage, user database
+
+- item microservices: separate from the shopping cart
