@@ -10,7 +10,7 @@ using ShoppingCart.Models;
 namespace ShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240501090509_InitialCreate")]
+    [Migration("20240601165244_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

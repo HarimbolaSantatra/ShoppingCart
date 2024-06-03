@@ -3,6 +3,9 @@ namespace ShoppingCart.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+/// <summary>
+/// A item inside a cart
+/// </summary>
 [Table("Item")]
 public class Item {
 
